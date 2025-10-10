@@ -1,9 +1,7 @@
 /* global chrome */
 import React from 'react';
 
-// Make sure your Tailwind prefix is applied if needed, or use inline styles
 const buttonStyle = {
-  backgroundColor: '#007bff',
   color: 'white',
   border: 'none',
   padding: '2px 2px',
@@ -41,7 +39,7 @@ const InjectedButton = ({ symbolId }) => {
   };
 
   return (
-    <button style={buttonStyle} onClick={handleOpenPopup}>
+    <button className='border-8 bg-orange-500' style={buttonStyle} onClick={handleOpenPopup}>
       Open
     </button>
   );

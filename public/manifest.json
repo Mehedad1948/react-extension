@@ -8,10 +8,11 @@
   "background": {
     "service_worker": "static/js/background.js"
   },
-  "content_scripts": [
+ "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["static/js/content.js"]
+      "js": ["static/js/content.js"],
+      "css": ["static/css/main.css"]
     }
   ],
   "action": {
