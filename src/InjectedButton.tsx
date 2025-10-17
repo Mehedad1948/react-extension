@@ -1,20 +1,8 @@
-/* global chrome */
 import React from 'react';
 
-const buttonStyle = {
-  color: 'white',
-  border: 'none',
-  padding: '2px 2px',
-  borderRadius: '4px',
-  cursor: 'pointer',
-  fontSize: '12px',
-  fontWeight: 'bold',
-  position: 'absolute',
-  left: 0,
-  top: 0,
-};
 
-const InjectedButton = ({ symbolId, symbolName }) => {
+
+const InjectedButton = ({ symbolId, symbolName }: { symbolId: string, symbolName: string }) => {
   const handleOpenPopup = (e) => {
     e.stopPropagation();
     console.log(
@@ -39,7 +27,7 @@ const InjectedButton = ({ symbolId, symbolName }) => {
   };
 
   return (
-    <button className='border-8 bg-orange-500' style={buttonStyle} onClick={handleOpenPopup}>
+    <button className='border-8 bg-orange-500'  onClick={handleOpenPopup}>
       Open
     </button>
   );
