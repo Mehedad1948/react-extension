@@ -14,15 +14,15 @@ const buttonStyle = {
   top: 0,
 };
 
-const InjectedButton = ({ symbolId }) => {
+const InjectedButton = ({ symbolId, symbolName }) => {
   const handleOpenPopup = (e) => {
     e.stopPropagation();
     console.log(
-      `[Extension] Button clicked for symbol: ${symbolId}. Sending 'openPopupWithSymbol' message.`
+      `[Extension] Button clicked for symbol: ${symbolName} ${symbolId}. Sending 'openPopupWithSymbol' message.`
     );
 
     chrome.runtime.sendMessage(
-      { action: 'openPopupWithSymbol', symbol: symbolId },
+      { action: 'openPopupWithSymbol', symbolId: symbolId, symbolName },
       (response) => {
         if (chrome.runtime.lastError) {
           console.error(

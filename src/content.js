@@ -2,12 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import InjectedButton from './InjectedButton';
 
+// Track which cells we've already processed
+const processedCells = new WeakSet();
 
 function injectButtons() {
-
     const targetCells = document.querySelectorAll('div[role="gridcell"][col-id="symbolName"]');
 
     targetCells.forEach((cell) => {
+        // Skip if already processed
+        if (processedCells.has(cell)) {
+            return;
+        }
 
         const targetDiv = cell.querySelector('.ag-cell-wrapper .ag-cell-value > portfolio-symbol-renderer > div.d-flex.flex-column');
 
@@ -15,21 +20,24 @@ function injectButtons() {
             return;
         }
 
-
         const idElement = cell.querySelector('div[data-cy^="symbol-name-renderer-"]');
-
 
         if (!idElement) {
             return;
         }
-        // Get the full attribute value (e.g., "symbol-name-renderer-IRTKROBA0001")
+        
         const dataCyValue = idElement.getAttribute('data-cy');
-        // Split it by the hyphen and get the last part
         const uniqueId = dataCyValue.split('-').pop();
 
-        // Avoid injecting multiple times
-        if (targetDiv.querySelector('.my-extension-container')) {
-            // Optional: You could check if the ID has changed and update, but for now we'll just skip.
+        // Get the symbol name
+        const symbolNameElement = cell.querySelector('div[data-cy="renderer-symbol-name"]');
+        const symbolName = symbolNameElement ? symbolNameElement.textContent.trim() : '';
+
+        console.log('Symbol Name:', symbolName);
+
+        // Double-check to avoid injecting multiple times
+        if (cell.querySelector('.my-extension-container')) {
+            processedCells.add(cell);
             return;
         }
 
@@ -48,19 +56,26 @@ function injectButtons() {
 
         root.render(
             <React.StrictMode>
-                <InjectedButton symbolId={uniqueId} />
+                <InjectedButton symbolId={uniqueId} symbolName={symbolName} />
             </React.StrictMode>
         );
+
+        // Mark this cell as processed
+        processedCells.add(cell);
     });
 }
 
-
+// Run initial injection
 injectButtons();
 
+// Debounce timer outside the callback
+let debounceTimer;
 
 const observer = new MutationObserver((mutations) => {
-    let debounceTimer;
+    // Clear previous timer
     clearTimeout(debounceTimer);
+    
+    // Set new timer
     debounceTimer = setTimeout(() => {
         const hasGrid = document.querySelector('div.ag-root-wrapper');
         if (hasGrid) {
@@ -69,7 +84,11 @@ const observer = new MutationObserver((mutations) => {
     }, 500);
 });
 
+// Observe with more specific configuration to reduce unnecessary triggers
 observer.observe(document.body, {
     childList: true,
-    subtree: true
+    subtree: true,
+    // Don't observe attributes or characterData to reduce noise
+    attributes: false,
+    characterData: false
 });

@@ -8,7 +8,7 @@ module.exports = {
     const isEnvDevelopment = env === 'development';
     const isEnvProduction = env === 'production';
 
-    // --- START: CRITICAL CHROME EXTENSION CONFIGURATION ---
+    
 
     // 1. Set Entry Points for Popup, Content Script, and Background Script
     config.entry = {
@@ -78,8 +78,6 @@ module.exports = {
         })
       );
     }
-    
-    // --- END: CRITICAL CHROME EXTENSION CONFIGURATION ---
 
     return config;
   },
