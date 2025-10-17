@@ -3,8 +3,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   webpack: function (config, env) {
-    // --- ENTRY POINTS ---
-    // Define all parts of your extension here.
     config.entry = {
       main: path.resolve(__dirname, './src/index.tsx'), // React popup
       content: path.resolve(__dirname, './src/content.tsx'),

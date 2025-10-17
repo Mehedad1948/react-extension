@@ -35,7 +35,7 @@ function App() {
       </button>
 
       <footer className="mt-6 text-xs text-gray-400">
-        v1.0.0 • Built with React + TypeScript
+        v1.0.0 • Built with React + TypeScript test 256a
       </footer>
     </div>
   );
