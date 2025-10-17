@@ -1,83 +1,61 @@
-// config-overrides.js
-
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  webpack: function(config, env) {
-    const isEnvDevelopment = env === 'development';
-    const isEnvProduction = env === 'production';
-
-    
-
-    // 1. Set Entry Points for Popup, Content Script, and Background Script
+  webpack: function (config, env) {
+    // --- ENTRY POINTS ---
+    // Define all parts of your extension here.
     config.entry = {
-      main: path.resolve(__dirname, './src/index.js'),
-      content: path.resolve(__dirname, './src/content.js'),
-      background: path.resolve(__dirname, './src/background.js'),
+      main: path.resolve(__dirname, './src/index.tsx'), // React popup
+      content: path.resolve(__dirname, './src/content.tsx'),
+      background: path.resolve(__dirname, './src/background.ts'),
+      options: path.resolve(__dirname, './src/options/index.tsx'),
     };
 
-    // 2. Set Output File Names
+    // --- OUTPUT CONFIG ---
     config.output = {
       ...config.output,
       filename: 'static/js/[name].js',
       chunkFilename: 'static/js/[name].chunk.js',
     };
 
-    // 3. Disable Code Splitting
+    // --- DISABLE CODE SPLITTING (important for Chrome extensions) ---
     config.optimization.splitChunks = {
-      cacheGroups: {
-        default: false,
-      },
+      cacheGroups: { default: false },
     };
     config.optimization.runtimeChunk = false;
 
-    // 4. Remove CSS Content Hash
+    // --- FIX CSS FILE NAMING (remove hashes) ---
     const miniCssExtractPlugin = config.plugins.find(
       (plugin) => plugin.constructor.name === 'MiniCssExtractPlugin'
     );
-    
     if (miniCssExtractPlugin) {
       miniCssExtractPlugin.options.filename = 'static/css/[name].css';
       miniCssExtractPlugin.options.chunkFilename = 'static/css/[name].chunk.css';
     }
 
-    // 5. Modify HTML Plugin to use relative paths
+    // --- FIX HTML OUTPUT (only inject popup’s script) ---
     const htmlWebpackPlugin = config.plugins.find(
       (plugin) => plugin.constructor.name === 'HtmlWebpackPlugin'
     );
-    
     if (htmlWebpackPlugin) {
-      htmlWebpackPlugin.options.inject = true;
-      htmlWebpackPlugin.options.chunks = ['main']; // Only inject main chunk
+      htmlWebpackPlugin.userOptions.inject = true;
+      htmlWebpackPlugin.userOptions.chunks = ['main'];
     }
 
-    // 6. Ensure public/manifest.json is copied over
-    const copyWebpackPlugin = config.plugins.find(
-      (plugin) => plugin.constructor.name === 'CopyPlugin'
-    );
-    
-    if (copyWebpackPlugin) {
-      copyWebpackPlugin.patterns[0].transform = function (content, path) {
-        if (path.endsWith('manifest.json')) {
-          return content;
-        }
-        return content;
-      };
-    } else {
-      config.plugins.push(
-        new CopyWebpackPlugin({
-          patterns: [
-            {
-              from: 'public',
-              globOptions: {
-                ignore: ['**/index.html'],
-              },
+    // --- COPY PUBLIC FILES (manifest, icons, etc.) ---
+    config.plugins.push(
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: 'public',
+            globOptions: {
+              ignore: ['**/index.html'],
             },
-          ],
-        })
-      );
-    }
+          },
+        ],
+      })
+    );
 
     return config;
   },

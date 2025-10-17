@@ -1,17 +1,22 @@
 {
   "compilerOptions": {
+    
     "target": "ES2020",
-    "lib": ["DOM", "ES2020"],
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "module": "ESNext",
+    "moduleResolution": "Node",
     "jsx": "react-jsx",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
+    "resolveJsonModule": true,
+
+    
     "strict": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
     "noEmit": true,
-    "types": ["chrome"]
+    "types": ["chrome", "node"]
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules", "build", "dist"]
 }
