@@ -1,15 +1,20 @@
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "openPopup" && request.pageTitle) {
-    
-    chrome.storage.local.set({ currentPageTitle: request.pageTitle }, () => {
-      
-      if (chrome.action.openPopup) {
-        chrome.action.openPopup();
-        sendResponse({ status: "Popup opened" });
-      } else {
-        sendResponse({ status: "Popup could not be opened" });
-      }
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.action === 'OPEN_BOOK_POPUP' && msg.bookTitle) {
+    const bookTitle = msg.bookTitle.trim();
+    chrome.storage.local.set({ lastSelectedBook: bookTitle });
+
+    console.log('[EXT] open custom popup window for:', bookTitle);
+
+    chrome.windows.create({
+      url: chrome.runtime.getURL('popup.html'),
+      type: 'popup',
+      width: 640,
+      height: 560,
+      focused: true,
     });
-    return true; 
+
+    sendResponse({ ok: true });
   }
+
+  return true;
 });

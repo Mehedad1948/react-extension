@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "React Tailwind Chrome Extension",
+  "name": "Book Buddy",
   "version": "1.0.0",
-  "description": "A Chrome Extension template built with React, Tailwind, and TypeScript.",
+  "description": "A Chrome Extension to summarize book in Taaghche website",
   "permissions": ["activeTab", "scripting", "tabs", "storage"],
   "host_permissions": ["<all_urls>"],
 
